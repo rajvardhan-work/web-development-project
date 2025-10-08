@@ -1,0 +1,56 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f9f9;
+  color: #333;
+}
+
+header {
+  background-color: #0077b6;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.intro, .places, .cta {
+  padding: 2rem;
+  text-align: center;
+}
+
+.places ul {
+  list-style-type: square;
+  text-align: left;
+  max-width: 300px;
+  margin: auto;
+}
+
+.places img {
+  margin-top: 1rem;
+  border-radius: 10px;
+}
+
+.cta button {
+  background-color: #ff9800;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cta button:hover {
+  background-color: #e68900;
+}
+
+footer {
+  background-color: #0077b6;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 20px;
+}
