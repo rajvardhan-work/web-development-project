@@ -1,19 +1,29 @@
-name: CI Pipeline
+name: CI/CD to EC2
 
 on:
   push:
     branches: [ "main" ]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Show files
-      run: ls
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.EC2_KEY }}" > ~/.ssh/key.pem
+        chmod 400 ~/.ssh/key.pem
 
-    - name: Print message
-      run: echo "CI/CD is working!"
+    - name: Deploy to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no -i ~/.ssh/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          cd /var/www/html
+          sudo rm -rf *
+          sudo bash -c 'cat > index.html' << 'EOL'
+          $(cat index.html)
+          EOL
+        EOF
