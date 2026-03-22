@@ -1,11 +1,30 @@
-- name: Deploy to EC2
-  run: |
-    echo "${{ secrets.EC2_KEY }}" > key.pem
-    chmod 400 key.pem
+name: CI/CD to EC2
 
-    scp -o StrictHostKeyChecking=no -i key.pem index.html ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/
+on:
+  push:
+    branches:
+      - main
 
-    ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-      sudo mv /home/ubuntu/index.html /var/www/html/index.html
-      sudo systemctl restart nginx
-    EOF
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH key
+        run: |
+          echo "${{ secrets.EC2_KEY }}" > key.pem
+          chmod 400 key.pem
+
+      - name: Copy file to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no -i key.pem index.html ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ubuntu/
+
+      - name: Deploy on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            sudo mv /home/ubuntu/index.html /var/www/html/index.html
+            sudo systemctl restart nginx
+          EOF
